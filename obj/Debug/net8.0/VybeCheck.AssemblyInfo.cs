@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VybeCheck")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5c43f997fbc390bc145dd2c27e76a647c74b8634")]
 [assembly: System.Reflection.AssemblyProductAttribute("VybeCheck")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VybeCheck")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
