@@ -3,7 +3,8 @@ using VybeCheck.Models;
 using VybeCheck.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-var connect = builder.Configuration.GetConnectionString("MySql");
+var dbPassword = builder.Configuration["DbPassword"];
+var connect = $"server=localhost;user=root;password={dbPassword};database=vybe_check_db";
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
