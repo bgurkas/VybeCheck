@@ -1,0 +1,29 @@
+@model VybeIndexViewModel
+
+@{
+    ViewData["Title"] = "All Albums";
+}
+
+<h1>All Albums</h1>
+
+@if (Model.Items.Count == 0){
+    <p>No albums present in the database.</p>
+} else {
+    <div style="display: flex; width: 65rem; flex-wrap: wrap; gap: 1rem">
+        @foreach (var album in Model.Items) {
+            <div class="card">
+                <div class="card-body">
+                    <h4>@album.Title</h4>
+                    <p>@album.Artist</p>
+                    <br />
+                    <p class="text-end text-muted">Added by: @album.Username</p>
+                    <p class="text-end text-muted">Last Updated: @album.LastUpdated</p>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <span>@album.CommentsCount comment(s)</span>
+                    <a class="btn btn-primary" href="/albums/@album.AlbumId">View</a>
+                </div>
+            </div>
+        }
+    </div>
+}

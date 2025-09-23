@@ -50,6 +50,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/beril/WOS/In-Class/VybeCheck/Views/Vybe/GetAlbumForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVnliZVxHZXRBbGJ1bUZvcm0uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/beril/WOS/In-Class/VybeCheck/Views/Vybe/VybeIndex.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVnliZVxWeWJlSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/beril/WOS/In-Class/VybeCheck/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

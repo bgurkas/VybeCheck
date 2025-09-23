@@ -11,6 +11,8 @@ public class Comment
 
     public string Content { get; set; } = "";
 
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
     public User? User { get; set; }
     
     public Album? Album { get; set; }

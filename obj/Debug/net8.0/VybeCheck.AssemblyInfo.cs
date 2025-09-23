@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VybeCheck")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d6c42a4cfb2d78a10a512c3a9f2ee3fa5f717d4d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1f35045962859cf0b1044b580b8a98d4cf76d74e")]
 [assembly: System.Reflection.AssemblyProductAttribute("VybeCheck")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VybeCheck")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
