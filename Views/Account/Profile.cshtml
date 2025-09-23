@@ -1,0 +1,17 @@
+@model ProfileViewModel
+@{
+    ViewData["Title"] = "Account Profile";
+}
+
+<h1>Profile</h1>
+
+<div class="card">
+    <div class="card-body">
+        <p class="card-text">
+            <b>Username: </b> @Model.Username<br />
+            <b>Email: </b> @Model.Email<br /><br />
+            <b>Albums Added: </b> @Model.AlbumsPostedCount<br />
+            <b>Comments Given to Others: </b> @Model.CommentsPostedCount<br />
+        </p>
+    </div>
+</div>
