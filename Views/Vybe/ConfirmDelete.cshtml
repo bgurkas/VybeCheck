@@ -1,0 +1,16 @@
+@model AlbumViewModel
+
+@{
+    ViewData["Title"] = "Confirm Deletion";
+}
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title">Are you sure you want to delete @Model.Title by @Model.Artist from your collection?</h3>
+        <p class="card-text">This action is not reversible.</p>
+        <form asp-controller="Vybe" asp-action="DeleteAlbum" asp-route-id=@Model.Id method="post">
+            <input type="hidden" asp-for="Id" />
+            <a class="m-1 btn btn-outline-danger" href="/albums">Cancel</a>
+            <button class="btn btn-danger" type="submit">Delete</button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+@model AlbumDetailsViewModel
+@{
+    ViewData["Title"] = "Album Details";
+    var album = Model;
+}
+<h1>Album Details</h1>
+
+<div class="row">
+    <div class="card col-8">
+        <div class="card-body">
+            <h4>@album.Title</h4>
+            <p><b>Artist: </b>@album.Artist</p>
+            <p><b>Description: </b>@album.Description</p>
+            @if (album.UploadedBy == album.CurrentUser) {
+                <div class="text-end">
+                    <a class="btn btn-secondary" href="/albums/@album.AlbumId/edit">Edit</a>
+                    <a class="btn btn-danger" href="/albums/@album.AlbumId/delete">Delete</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

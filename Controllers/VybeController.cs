@@ -107,4 +107,79 @@ public class VybeController : Controller
         };
         return View(vm);
     }
+
+    [HttpGet("{id}/edit")]
+    public async Task<IActionResult> EditAlbumForm(int id)
+    {
+        if (!AuthCheck()) return Unauthorized();
+        var uid = GetSessionId();
+
+        var album = await _context.Albums.AsNoTracking().SingleOrDefaultAsync(a => a.Id == id);
+
+        if (album is null) return NotFound();
+
+        if (album.UserId != (int)uid!) return StatusCode(403);
+
+        return View(new AlbumViewModel { Id = album.Id, Title = album.Title, Artist = album.Artist, Description = album.Description });
+    }
+
+    [HttpPost("update")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditAlbum(int id, AlbumViewModel vm)
+    {
+        if (!AuthCheck()) return Unauthorized();
+        if (id != vm.Id) return BadRequest();
+
+        if (ModelState.IsValid)
+        {
+            var album = await _context.Albums.FindAsync(id);
+            if (album is null) return NotFound();
+            if (album.UserId != (int)GetSessionId()!) return StatusCode(403); // If the request isn't made by the album's author
+
+            album.Title = vm.Title;
+            album.Artist = vm.Artist;
+            album.Description = vm.Description;
+            album.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("AlbumDetails", new { id = album.Id });
+        }
+        return View("EditAlbumForm", vm);
+    }
+
+    [HttpGet("{id}/delete")]
+    public async Task<IActionResult> ConfirmDelete(int id)
+    {
+        if (!AuthCheck()) return Unauthorized();
+
+        var album = await _context.Albums.FindAsync(id);
+        if (album is null) return NotFound();
+        if (album.UserId != (int)GetSessionId()!) return StatusCode(403); // If the request isn't made by the album's author
+
+        var vm = new AlbumViewModel
+        {
+            Id = album.Id,
+            Title = album.Title,
+            Artist = album.Artist,
+            Description = album.Description
+        };
+        return View(vm);
+    }
+
+    [HttpPost("{id}/delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteAlbum(AlbumViewModel vm)
+    {
+        if (!AuthCheck()) return Unauthorized();
+        if (vm.Id is null) return BadRequest();
+
+        var album = await _context.Albums.FindAsync(vm.Id);
+        if (album is null) return NotFound();
+        if (album.UserId != (int)GetSessionId()!) return StatusCode(403); // If the request isn't made by the album's author
+
+        _context.Albums.Remove(album);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("VybeIndex");
+    }
 }

@@ -1,0 +1,29 @@
+@model AlbumViewModel
+
+@{
+    ViewData["Title"] = "Edit an Album";
+}
+
+<h1>Edit an Album</h1>
+
+<form asp-controller="Vybe" asp-action="EditAlbum" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id">
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">Title:</label>
+        <input asp-for="Title" class="form-control" value=@Model.Title />
+        <span class="form-text text-danger" asp-validation-for="Title"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Artist" class="form-label">Artist:</label>
+        <input asp-for="Artist" class="form-control" value=@Model.Artist />
+        <span class="form-text text-danger" asp-validation-for="Artist"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">Description (optional):</label>
+        <input asp-for="Description" class="form-control" value=@Model.Description />
+        <span class="form-text text-danger" asp-validation-for="Description"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
