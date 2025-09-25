@@ -8,6 +8,8 @@ public class IndexItemViewModel
 
     public string Artist { get; set; } = "";
 
+    public string ArtworkUrl60 { get; set; } = "";
+
     public int CommentsCount { get; set; }
 
     public string Username { get; set; } = "";

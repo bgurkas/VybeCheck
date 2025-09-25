@@ -11,6 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationContext>((options) => { options.UseMySql(connect, ServerVersion.AutoDetect(connect)); });
 builder.Services.AddSession();
 builder.Services.AddScoped<IPasswordService, BcryptPasswordService>();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 

@@ -1,0 +1,22 @@
+@model SnippetViewModel
+
+@{
+    ViewData["Title"] = "Add a Song Snippet";
+}
+
+<h1>Add a Song Snippet</h1>
+
+<form asp-controller="Vybe" asp-action="AddSnippet" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="AlbumId">
+
+    <div class="card">
+        <select class="form-select" asp-for="TrackId" required>
+            @foreach (TrackData track in Model.Tracklist) {
+                <option value="@track.TrackId">@track.TrackName</option>
+            }
+        </select>
+        <span class="form-text text-danger" asp-validation-for="TrackId"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Select Song</button>
+</form>

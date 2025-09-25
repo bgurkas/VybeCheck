@@ -4,15 +4,18 @@ using VybeCheck.Models;
 using VybeCheck.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 [Route("albums")]
 public class VybeController : Controller
 {
     private readonly ApplicationContext _context;
+    private readonly IHttpClientFactory _clientFactory;
 
-    public VybeController(ApplicationContext context)
+    public VybeController(ApplicationContext context, IHttpClientFactory clientFactory)
     {
         _context = context;
+        _clientFactory = clientFactory;
     }
 
     // Helper function to check if userId exists in the session.
@@ -45,7 +48,8 @@ public class VybeController : Controller
             CommentsCount = album.Comments.Count,
             Username = album.User!.Username,
             UserId = album.UserId,
-            LastUpdated = album.UpdatedAt
+            LastUpdated = album.UpdatedAt,
+            ArtworkUrl60 = album.ArtworkUrl60
         }).ToList();
 
         return View(new VybeIndexViewModel { Items = indexItems });
@@ -67,11 +71,30 @@ public class VybeController : Controller
         if (!ModelState.IsValid) return View("GetAlbumForm", vm);
 
         var uid = GetSessionId();
+
+        // Populate some album fields with data from API
+        var client = _clientFactory.CreateClient();
+        client.DefaultRequestHeaders.Add("Accept", "application/json");
+
+        var searchStr = $"{vm.Artist} {vm.Title}";
+        var response = await client.GetAsync($"https://itunes.apple.com/search?term={searchStr}&entity=album&limit=1");
+
+        if (!response.IsSuccessStatusCode) return BadRequest();
+
+        var jString = await response.Content.ReadAsStringAsync();
+        var albumResponse = JsonSerializer.Deserialize<ResponseWrapper>(jString);
+        var albumData = albumResponse!.Results[0];
+
         var newAlbum = new Album
         {
             Title = vm.Title,
             Artist = vm.Artist,
             Description = vm.Description,
+            Genre = albumData.Genre,
+            ReleaseDate = albumData.ReleaseDate,
+            CollectionId = albumData.CollectionId,
+            ArtworkUrl60 = albumData.ArtworkUrl60,
+            ArtworkUrl100 = albumData.ArtworkUrl100,
             UserId = (int)uid!
         };
 
@@ -101,11 +124,90 @@ public class VybeController : Controller
             Title = album.Title,
             Artist = album.Artist,
             Description = album.Description,
+            Genre = album.Genre,
+            ReleaseDate = DateOnly.FromDateTime(album.ReleaseDate),
+            CollectionId = album.CollectionId,
+            ArtworkUrl100 = album.ArtworkUrl100,
+            SnippetUrl = album.SnippetUrl,
+            SnippetName = album.SnippetName,
             UploadedBy = album.User!.Username,
             LastUpdated = album.UpdatedAt,
             Comments = album.Comments.ToList()
         };
         return View(vm);
+    }
+
+    [HttpGet("{id}/snippet")]
+    public async Task<IActionResult> GetSnippetForm(int id)
+    {
+        if (!AuthCheck()) return Unauthorized();
+        var uid = GetSessionId();
+        var album = await _context.Albums.AsNoTracking().SingleOrDefaultAsync(a => a.Id == id);
+
+        if (album is null) return NotFound();
+
+        if (album.UserId != (int)uid!) return StatusCode(403);
+
+        //Query the API with this album's ID
+        var client = _clientFactory.CreateClient();
+        client.DefaultRequestHeaders.Add("Accept", "application/json");
+
+        var response = await client.GetAsync($"https://itunes.apple.com/lookup?id={album.CollectionId}&entity=song");
+
+        if (!response.IsSuccessStatusCode) return BadRequest();
+
+        var jString = await response.Content.ReadAsStringAsync();
+        var trackResponse = JsonSerializer.Deserialize<TrackWrapper>(jString);
+        var tracklist = new List<TrackData>();
+        foreach (TrackData item in trackResponse!.Results)
+        {
+            if (item.WrapperType != "collection")
+            {
+                tracklist.Add(item);
+            }
+        }
+
+        // Populate VM and pass it to View
+        var vm = new SnippetViewModel
+        {
+            Tracklist = tracklist,
+            AlbumId = album.Id
+        };
+        return View(vm);
+    }
+
+    [HttpPost("snippet")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddSnippet(SnippetViewModel vm)
+    {
+        if (!AuthCheck()) return Unauthorized();
+        //if (id != vm.AlbumId) return BadRequest();
+
+        if (ModelState.IsValid)
+        {
+            var album = await _context.Albums.FindAsync(vm.AlbumId);
+            if (album is null) return NotFound();
+            if (album.UserId != (int)GetSessionId()!) return StatusCode(403); // If the request isn't made by the album's author
+
+            //Query the API with the Track ID that was selected
+            var client = _clientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+
+            var response = await client.GetAsync($"https://itunes.apple.com/lookup?id={vm.TrackId}");
+
+            if (!response.IsSuccessStatusCode) return BadRequest();
+
+            var jString = await response.Content.ReadAsStringAsync();
+            var trackResponse = JsonSerializer.Deserialize<TrackWrapper>(jString);
+            var trackData = trackResponse!.Results[0];
+
+            album.SnippetUrl = trackData.SnippetUrl;
+            album.SnippetName = trackData.TrackName;
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("AlbumDetails", new { id = album.Id });
+        }
+        return View("GetSnippetForm", vm);
     }
 
     [HttpGet("{id}/edit")]
@@ -136,9 +238,29 @@ public class VybeController : Controller
             if (album is null) return NotFound();
             if (album.UserId != (int)GetSessionId()!) return StatusCode(403); // If the request isn't made by the album's author
 
+            // Update genre and release date in case title or artist changed.s
+            var client = _clientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+
+            var searchStr = $"{vm.Artist} {vm.Title}";
+            var response = await client.GetAsync($"https://itunes.apple.com/search?term={searchStr}&entity=album&limit=1");
+
+            if (!response.IsSuccessStatusCode) return BadRequest();
+
+            var jString = await response.Content.ReadAsStringAsync();
+            var albumResponse = JsonSerializer.Deserialize<ResponseWrapper>(jString);
+            var albumData = albumResponse!.Results[0];
+
             album.Title = vm.Title;
             album.Artist = vm.Artist;
             album.Description = vm.Description;
+            album.Genre = albumData.Genre;
+            album.ReleaseDate = albumData.ReleaseDate;
+            album.CollectionId = albumData.CollectionId;
+            album.ArtworkUrl60 = albumData.ArtworkUrl60;
+            album.ArtworkUrl100 = albumData.ArtworkUrl100;
+            album.SnippetUrl = "";
+            album.SnippetName = "";
             album.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();

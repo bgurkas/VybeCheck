@@ -6,17 +6,38 @@
 <h1>Album Details</h1>
 
 <div class="row">
-    <div class="card col-8">
+    <div class="card">
         <div class="card-body">
-            <h4>@album.Title</h4>
-            <p><b>Artist: </b>@album.Artist</p>
-            <p><b>Description: </b>@album.Description</p>
-            @if (album.UploadedBy == album.CurrentUser) {
-                <div class="text-end">
-                    <a class="btn btn-secondary" href="/albums/@album.AlbumId/edit">Edit</a>
-                    <a class="btn btn-danger" href="/albums/@album.AlbumId/delete">Delete</a>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h4>@album.Title</h4>
+                    <p><b>Artist: </b>@album.Artist</p>
+                    <p><b>Genre: </b>@album.Genre</p>
+                    <p><b>Release Date: </b>@album.ReleaseDate</p>
+                    <p><b>Description: </b>@album.Description</p>
                 </div>
-            }
+                <div class="m-3">
+                    <img src="@Model.ArtworkUrl100" alt="Album artwork" width="200px">
+                </div>
+            </div>
+            <div class="text-end">
+                <p><b>Last updated: </b>@album.LastUpdated</p>
+            </div>
+        </div>
+        <div class="card-footer">
+                <div class="d-flex align-items-center">
+                    @if (Model.SnippetUrl != "") {
+                        <label>@Model.SnippetName</label>
+                        <audio src="@Model.SnippetUrl" controls></audio>
+                    }
+                    @if (album.UploadedBy == album.CurrentUser) {
+                        <div class="text-end ms-auto">
+                            <a class="btn btn-primary" href="/albums/@album.AlbumId/snippet">Add a Song Snippet</a>
+                            <a class="btn btn-secondary" href="/albums/@album.AlbumId/edit">Edit</a>
+                            <a class="btn btn-danger" href="/albums/@album.AlbumId/delete">Delete</a>
+                        </div>
+                    }
+                </div>
         </div>
     </div>
 </div>
