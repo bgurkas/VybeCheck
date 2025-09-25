@@ -47,5 +47,23 @@
 </div>
 
 <div class="card">
-    
+    <form asp-controller="Vybe" asp-action="PostComment" asp-route-uid="@Context.Session.GetInt32("userId")" method="post">
+        <input type="hidden" asp-for="CVM.AlbumId">
+
+        <div class="m-2">
+            <textarea asp-for="CVM.CommentContent" class="form-control" placeholder="Post a comment..."></textarea>
+            <span class="form-text text-danger" asp-validation-for="CVM.CommentContent"></span>
+        </div>
+        <div class="text-end m-3"><button type="submit" class="btn btn-primary">Post Comment</button></div>
+    </form>
+    <table class="table table-striped">
+        <tbody>
+            @foreach (var comment in Model.Comments) {
+                <tr class="align-middle">
+                    <td><b>@comment.User!.Username:</b> @comment.Content</td>
+                    <td class="text-end"><b>Posted at:</b> @comment.CreatedAt</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

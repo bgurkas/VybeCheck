@@ -60,6 +60,9 @@ public class VybeController : Controller
     {
         if (!AuthCheck()) return Unauthorized();
 
+        var user = await _context.Users.FindAsync(id);
+        if (user is null) return Unauthorized();
+
         var albums = await _context.Albums.AsNoTracking().Include(album => album.User).Where(a => a.UserId == id).ToListAsync();
 
         var indexItems = albums.Select(album => new IndexItemViewModel
@@ -75,6 +78,31 @@ public class VybeController : Controller
         vm.Items = indexItems;
 
         return View(vm);
+    }
+
+    [HttpPost("{uid}/comment")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> PostComment(int uid, AlbumDetailsViewModel vm)
+    {
+        if (!AuthCheck()) return Unauthorized();
+
+        // If user ID doesn't exist in the database
+        var user = await _context.Users.FindAsync(uid);
+        if (user is null) return Unauthorized();
+
+        if (!ModelState.IsValid) return View("AlbumDetails", vm);
+
+        var newComment = new Comment
+        {
+            UserId = user.Id,
+            AlbumId = vm.CVM!.AlbumId,
+            Content = vm.CVM!.CommentContent
+        };
+
+        await _context.Comments.AddAsync(newComment);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("AlbumDetails", new { id = newComment.AlbumId });
     }
 
     [HttpGet("new")]
@@ -155,7 +183,8 @@ public class VybeController : Controller
             UploadedBy = album.User!.Username,
             UploaderId = album.UserId,
             LastUpdated = album.UpdatedAt,
-            Comments = album.Comments.ToList()
+            Comments = album.Comments.OrderByDescending(c => c.CreatedAt).ToList(),
+            CVM = new CommentViewModel { AlbumId = album.Id}
         };
         return View(vm);
     }

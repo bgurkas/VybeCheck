@@ -111,6 +111,7 @@ public class AccountController : Controller
         var vm = new ProfileViewModel
         {
             Username = user.Username,
+            UserId = user.Id,
             Email = user.Email,
             AlbumsPostedCount = user.Albums.Count,
             CommentsPostedCount = user.Comments.Count,

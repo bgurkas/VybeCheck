@@ -29,4 +29,6 @@ public class AlbumDetailsViewModel
     public DateTime LastUpdated { get; set; }
 
     public List<Comment> Comments { get; set; } = [];
+
+    public CommentViewModel? CVM { get; set; }
 }

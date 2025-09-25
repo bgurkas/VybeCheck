@@ -13,5 +13,6 @@
             <b>Albums Added: </b> @Model.AlbumsPostedCount<br />
             <b>Comments Given to Others: </b> @Model.CommentsPostedCount<br />
         </p>
+        <a class="btn btn-warning" asp-controller="Vybe" asp-action="FilterCollection" asp-route-id="@Model.UserId">View My Collection</a>
     </div>
 </div>
