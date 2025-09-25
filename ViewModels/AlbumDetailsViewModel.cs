@@ -24,6 +24,8 @@ public class AlbumDetailsViewModel
 
     public string UploadedBy { get; set; } = "";
 
+    public int UploaderId { get; set; }
+
     public DateTime LastUpdated { get; set; }
 
     public List<Comment> Comments { get; set; } = [];

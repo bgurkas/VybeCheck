@@ -55,6 +55,28 @@ public class VybeController : Controller
         return View(new VybeIndexViewModel { Items = indexItems });
     }
 
+    [HttpGet("user/{id}")]
+    public async Task<IActionResult> FilterCollection(int id, VybeIndexViewModel vm)
+    {
+        if (!AuthCheck()) return Unauthorized();
+
+        var albums = await _context.Albums.AsNoTracking().Include(album => album.User).Where(a => a.UserId == id).ToListAsync();
+
+        var indexItems = albums.Select(album => new IndexItemViewModel
+        {
+            AlbumId = album.Id,
+            Title = album.Title,
+            Artist = album.Artist,
+            Username = album.User!.Username,
+            LastUpdated = album.UpdatedAt,
+            ArtworkUrl60 = album.ArtworkUrl60
+        }).ToList();
+
+        vm.Items = indexItems;
+
+        return View(vm);
+    }
+
     [HttpGet("new")]
     public IActionResult GetAlbumForm()
     {
@@ -131,6 +153,7 @@ public class VybeController : Controller
             SnippetUrl = album.SnippetUrl,
             SnippetName = album.SnippetName,
             UploadedBy = album.User!.Username,
+            UploaderId = album.UserId,
             LastUpdated = album.UpdatedAt,
             Comments = album.Comments.ToList()
         };

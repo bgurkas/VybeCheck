@@ -28,6 +28,7 @@
                     </ul>
                     <div class="m-auto">
                             @if (Context.Session.GetInt32("userId") is not null){
+                                <a class="btn btn-sm btn-primary" href="/albums">View All Albums</a>
                                 <a class="btn btn-sm btn-primary" href="/account/profile">Profile</a>
                                 <a class="btn btn-sm btn-outline-primary" href="/account/logout">Logout</a>
                             }

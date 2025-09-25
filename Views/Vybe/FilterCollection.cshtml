@@ -1,21 +1,18 @@
 @model VybeIndexViewModel
 
 @{
-    ViewData["Title"] = "All Albums";
+    ViewData["Title"] = "Filter a Collection";
 }
 
 <div class="d-flex align-items-center gap-4">
-    <h1>All Albums</h1>
-    <a class="btn btn-primary" href="/albums/new">Add a New Album</a>
+    <h1>@Model.Items[0].Username's Collection</h1>
 </div>
 
 @if (Model.Items.Count == 0){
-    <p>No albums present in the database.</p>
+    <p>No albums uploaded by this user.</p>
 } else {
     <div class="text-end">
-        <form asp-controller="Vybe" asp-action="FilterCollection" asp-route-id="@Context.Session.GetInt32("userId")" method="get">
-            <button type="submit" class="btn btn-warning">View Your Collection</button>
-        </form>
+        <a class="btn btn-primary" href="/albums">Back to All Albums</a>
     </div>
     <div style="display: flex; width: 65rem; flex-wrap: wrap; gap: 1rem">
         @foreach (var album in Model.Items) {
@@ -36,7 +33,6 @@
                     <p class="text-end text-muted">Last Updated: @album.LastUpdated</p>
                 </div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    <span>@album.CommentsCount comment(s)</span>
                     <a class="btn btn-primary" href="/albums/@album.AlbumId">View</a>
                 </div>
             </div>
