@@ -14,5 +14,5 @@ public class AlbumViewModel
     [MinLength(2, ErrorMessage = "Artist must have a minimum of 2 characters.")]
     public string Artist { get; set; } = "";
 
-    public string Description { get; set; } = "";
+    public string? Description { get; set; } = "";
 }

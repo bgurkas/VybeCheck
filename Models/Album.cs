@@ -9,7 +9,7 @@ public class Album
 
     public string Artist { get; set; } = String.Empty;
 
-    public string Description { get; set; } = "";
+    public string? Description { get; set; }
 
     public string Genre { get; set; } = "";
 

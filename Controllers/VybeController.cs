@@ -133,6 +133,7 @@ public class VybeController : Controller
 
         var jString = await response.Content.ReadAsStringAsync();
         var albumResponse = JsonSerializer.Deserialize<ResponseWrapper>(jString);
+        if (albumResponse!.Results.Count == 0) return NotFound();
         var albumData = albumResponse!.Results[0];
 
         var newAlbum = new Album
