@@ -28,8 +28,8 @@
         <div class="d-flex align-items-center">
             @if (Model.SnippetUrl != "") {
                 <span><b>Song Snippet:</b></span>
-                <label class="mx-2">@Model.SnippetName</label>
-                <audio src="@Model.SnippetUrl" controls></audio>
+                <label class="mx-2" style="max-width: 40%">@Model.SnippetName</label>
+                <audio id="player" src="@Model.SnippetUrl" controls></audio>
             }
             @if (album.UploadedBy == album.CurrentUser) {
                 <div class="text-end ms-auto">
@@ -46,7 +46,7 @@
     </div>
 </div>
 
-<div class="card">
+<div class="card mt-2">
     <form asp-controller="Vybe" asp-action="PostComment" asp-route-uid="@Context.Session.GetInt32("userId")" method="post">
         <input type="hidden" asp-for="CVM.AlbumId">
 

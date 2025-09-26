@@ -37,7 +37,7 @@
     "prod-like": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7056;http://localhost:5002",
+      "applicationUrl": "https://localhost:7054;http://localhost:5003",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       }

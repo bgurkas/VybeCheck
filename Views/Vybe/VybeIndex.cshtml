@@ -12,12 +12,12 @@
 @if (Model.Items.Count == 0){
     <p>No albums present in the database.</p>
 } else {
-    <div class="text-end">
+    <div class="text-end mb-3">
         <form asp-controller="Vybe" asp-action="FilterCollection" asp-route-id="@Context.Session.GetInt32("userId")" method="get">
             <button type="submit" class="btn btn-warning">View Your Collection</button>
         </form>
     </div>
-    <div style="display: flex; width: 65rem; flex-wrap: wrap; gap: 1rem">
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem">
         @foreach (var album in Model.Items) {
             <div class="card">
                 <div class="card-body">

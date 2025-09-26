@@ -90,7 +90,7 @@ public class VybeController : Controller
         var user = await _context.Users.FindAsync(uid);
         if (user is null) return Unauthorized();
 
-        if (!ModelState.IsValid) return View("AlbumDetails", vm);
+        if (!ModelState.IsValid) return RedirectToAction("AlbumDetails", new {id = vm.CVM!.AlbumId});
 
         var newComment = new Comment
         {
@@ -174,7 +174,7 @@ public class VybeController : Controller
             CurrentUser = currentUser,
             Title = album.Title,
             Artist = album.Artist,
-            Description = album.Description,
+            Description = album.Description!,
             Genre = album.Genre,
             ReleaseDate = DateOnly.FromDateTime(album.ReleaseDate),
             CollectionId = album.CollectionId,
