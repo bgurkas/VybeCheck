@@ -4,7 +4,7 @@ A catalogue for music enthusiasts to share their favorite albums and song snippe
 
 ## Demo
 ![Index Page](Assets/index_page.png)
-![Functionality](Assets/Demo.gif)
+![Functionality](Assets/Demo2.gif)
 
 ## Tech Stack
 - .NET (ASP.NET MVC), C#, Entity Framework, MySQL Server
