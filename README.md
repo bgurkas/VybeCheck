@@ -102,7 +102,7 @@ Key Entities:
 
 
 ## Roadmap
-- The minimum viable product (MVP) includes Registration and Login; Creating, Reading, Updating, and Deleting for Albums, Posting Song Snippets, Posting Comments, and Filtering to Each User's Collection.
+- The minimum viable product (MVP) includes Registration and Login; Creating, Reading, Updating, and Deleting for Albums; Posting Song Snippets; Posting Comments; and Filtering to Each User's Collection.
 
 ### Next Steps
 - Implementing searching and filtering features.
